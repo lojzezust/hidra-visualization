@@ -27,10 +27,22 @@ function initPlot(){
   let end_date = pred.x[pred.x.length - 1];
   app.home_range = [start_date, end_date];
 
+  let yMax = pred.y.map((y,i) => y+2*pred.stddev[i]);
+  let yMin = pred.y.map((y,i) => y-2*pred.stddev[i]);
+
   let data = [{
     x: pred.x,
     y: pred.y,
-    name: "HIDRA napoved"
+    name: "HIDRA napoved",
+    legendgroup:'predictions'
+  },
+  {
+    x: pred.x.concat([...pred.x].reverse()),
+    y: yMax.concat([...yMin].reverse()),
+    legendgroup:'predictions',
+    showlegend:false,
+    line: {width:0, color: '#1f77b4'},
+    fill:'toself'
   },
   {
     x:app.data.ssh.x,
@@ -60,6 +72,18 @@ function initPlot(){
   Plotly.newPlot(app.plot, data, layout);
 }
 
+function average(vals){
+  let sum = vals.reduce((sum, v)=>sum+v);
+  return sum/vals.length;
+}
+
+function stddev(vals){
+  let m = average(vals);
+  let sqDiffs = vals.map(v => (v-m)*(v-m));
+  
+  return Math.sqrt(average(sqDiffs));
+}
+
 function fetchData(){
   return getDates()
   .then(dates => {
@@ -80,10 +104,15 @@ function fetchData(){
       let last_v = ssh[ssh.length - 1];
       let last_d = ssh_dates[ssh_dates.length - 1];
 
+      let ens = d.Hidra[0].values.map((_, colIndex) => d.Hidra.map(row => row.values[colIndex]));
+      let means = ens.map(vals => average(vals));
+      let stddevs = ens.map(vals => stddev(vals))
+
       let pred = {
         date: d.ForecastDate,
         x: [last_d, ...d.Dates.map(val => parseDate(val))],
-        y: [last_v, ...d.Hidra[42].values]
+        y: [last_v, ...means],
+        stddev: [0, ...stddevs],
       };
 
       predictions.push(pred);
@@ -103,17 +132,22 @@ function fetchData(){
 }
 
 function updatePlot(index){
-  let dates = app.data.predictions[index].x;
-  let values = app.data.predictions[index].y;
-  let start_date = moment(dates[0]).subtract(24, 'hours').format();
-  let pred_start = dates[0];
-  let end_date = dates[dates.length - 1]
+  let pred = app.data.predictions[index];
+  let start_date = moment(pred.x[0]).subtract(24, 'hours').format();
+  let pred_start = pred.x[0];
+  let end_date = pred.x[pred.x.length - 1]
   app.home_range = [start_date, end_date];
+
+  let yMax = pred.y.map((y,i) => y+2*pred.stddev[i]);
+  let yMin = pred.y.map((y,i) => y-2*pred.stddev[i]);
 
   Plotly.animate(app.plot, {
     data: [{
-      x: dates,
-      y: values
+      x: pred.x,
+      y: pred.y
+    },{
+      x: pred.x.concat([...pred.x].reverse()),
+      y: yMax.concat([...yMin].reverse()),
     }],
     layout: {
       xaxis: {range: app.home_range},
