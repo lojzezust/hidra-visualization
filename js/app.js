@@ -1,16 +1,20 @@
 
+var all_runs;
+var plot;
+var run_select;
+
 window.onload = function(){
   // Store elements
-  var plot = document.getElementById('plot');
-  var run_select = document.getElementById('run_select');
+  plot = document.getElementById('plot');
+  run_select = document.getElementById('run_select');
 
   run_select.addEventListener("change", selectDate);
 
   // Populate date selection
   getDates()
   .then(dates => {
-    dates.sort();
-    for(date of dates) {
+    all_runs = dates.sort();
+    for(date of all_runs) {
       let opt = document.createElement("option");
       opt.value = date;
       opt.innerHTML = date;
@@ -40,7 +44,7 @@ function parseDate(date){
 }
 
 function selectDate(e){
-  displayPlot(run_select.value);
+  updatePlot(run_select.value);
 }
 
 function displayPlot(date){
@@ -65,5 +69,37 @@ function displayPlot(date){
         y:ssh_values,
         name: "Izmerjena višina"
       }], { } );
+  });
+}
+
+function updatePlot(date){
+  getRun(date)
+  .then(data => {
+    console.log(data);
+
+    let dates = data.Dates.map(val => parseDate(val));
+    let values = data.Hidra[42].values;
+
+    let ssh_dates = data.Koper.Dates.map(val => parseDate(val));
+    let ssh_values = data.Koper.values;
+
+    Plotly.animate(plot, {
+      data: [{
+        x: dates,
+        y: values
+      },{
+        x:ssh_dates,
+        y:ssh_values,
+        name: "Izmerjena višina"
+      }],
+      layout: {
+        xaxis: {range: [ssh_dates[0], dates[dates.length - 1]]}
+      }
+    }, {
+      transition: {
+        duration: 500,
+        easing: 'cubic-in-out'
+      }
+    });
   });
 }
