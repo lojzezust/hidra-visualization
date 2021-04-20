@@ -77,10 +77,13 @@ function fetchData(){
       ssh.push(...d.Koper.values);
       ssh_dates.push(...d.Koper.Dates.map(val => parseDate(val)));
 
+      let last_v = ssh[ssh.length - 1];
+      let last_d = ssh_dates[ssh_dates.length - 1];
+
       let pred = {
         date: d.ForecastDate,
-        x: d.Dates.map(val => parseDate(val)),
-        y: d.Hidra[42].values
+        x: [last_d, ...d.Dates.map(val => parseDate(val))],
+        y: [last_v, ...d.Hidra[42].values]
       };
 
       predictions.push(pred);
