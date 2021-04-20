@@ -1,32 +1,5 @@
 
-var all_runs;
-var plot;
-var run_select;
-
-window.onload = function(){
-  // Store elements
-  plot = document.getElementById('plot');
-  run_select = document.getElementById('run_select');
-
-  run_select.addEventListener("change", selectDate);
-
-  // Populate date selection
-  getDates()
-  .then(dates => {
-    all_runs = dates.sort();
-    for(date of all_runs) {
-      let opt = document.createElement("option");
-      opt.value = date;
-      opt.innerHTML = date;
-      run_select.appendChild(opt);
-    }
-    
-    // Display the most recent run
-    let last_date = dates[dates.length - 1];
-    run_select.value = last_date;
-    displayPlot(last_date);
-  });
-}
+var app = {};
 
 function getDates(){
   return fetch('https://gea.arso.gov.si/vg2020-dev/hidra/listHIDRAjson')
@@ -44,62 +17,149 @@ function parseDate(date){
 }
 
 function selectDate(e){
-  updatePlot(run_select.value);
+  updatePlot(app.run_select.value);
 }
 
-function displayPlot(date){
-  getRun(date)
+function initPlot(){
+  let pred = app.data.predictions[app.data.predictions.length - 1];
+  let start_date = moment(pred.x[0]).subtract(24, 'hours').format();
+  let pred_start = pred.x[0];
+  let end_date = pred.x[pred.x.length - 1];
+  app.home_range = [start_date, end_date];
+
+  let data = [{
+    x: pred.x,
+    y: pred.y,
+    name: "HIDRA napoved"
+  },
+  {
+    x:app.data.ssh.x,
+    y:app.data.ssh.y,
+    name: "Izmerjena višina"
+  }];
+
+  let layout = {
+    xaxis: {range: [start_date, end_date]},
+    shapes: [
+      {
+          type: 'rect',
+          xref: 'x',
+          yref: 'paper',
+          x0: start_date,
+          y0: 0,
+          x1: pred_start,
+          y1: 1,
+          fillcolor: '#d3d3d3',
+          opacity: 0.2,
+          line: {
+              width: 0
+          }
+      }]
+  };
+
+  Plotly.newPlot(app.plot, data, layout);
+}
+
+function fetchData(){
+  return getDates()
+  .then(dates => {
+    dates.sort();
+    app.dates = dates;
+    let promises = dates.map(date => getRun(date));
+    return Promise.all(promises);
+  })
   .then(data => {
-    console.log(data);
+    let ssh = [];
+    let ssh_dates = [];
+    let predictions = [];
 
-    let dates = data.Dates.map(val => parseDate(val));
-    let values = data.Hidra[42].values;
+    for(d of data){
+      ssh.push(...d.Koper.values);
+      ssh_dates.push(...d.Koper.Dates.map(val => parseDate(val)));
 
-    let ssh_dates = data.Koper.Dates.map(val => parseDate(val));
-    let ssh_values = data.Koper.values;
+      let pred = {
+        date: d.ForecastDate,
+        x: d.Dates.map(val => parseDate(val)),
+        y: d.Hidra[42].values
+      };
 
-    Plotly.newPlot(plot, [
-      {
-        x: dates,
-        y: values,
-        name: "HIDRA napoved"
+      predictions.push(pred);
+
+    }
+
+    app.data = {
+      ssh: {
+        x: ssh_dates,
+        y: ssh
       },
-      {
-        x:ssh_dates,
-        y:ssh_values,
-        name: "Izmerjena višina"
-      }], { } );
+      predictions: predictions
+    };
+
+    return Promise.resolve();
   });
 }
 
-function updatePlot(date){
-  getRun(date)
-  .then(data => {
-    console.log(data);
+function updatePlot(index){
+  let dates = app.data.predictions[index].x;
+  let values = app.data.predictions[index].y;
+  let start_date = moment(dates[0]).subtract(24, 'hours').format();
+  let pred_start = dates[0];
+  let end_date = dates[dates.length - 1]
+  app.home_range = [start_date, end_date];
 
-    let dates = data.Dates.map(val => parseDate(val));
-    let values = data.Hidra[42].values;
+  Plotly.animate(app.plot, {
+    data: [{
+      x: dates,
+      y: values
+    }],
+    layout: {
+      xaxis: {range: app.home_range},
+      shapes: [
+        {
+            type: 'rect',
+            xref: 'x',
+            yref: 'paper',
+            x0: start_date,
+            y0: 0,
+            x1: pred_start,
+            y1: 1,
+            fillcolor: '#d3d3d3',
+            opacity: 0.2,
+            line: {
+                width: 0
+            }
+        }]
+    }
+  }, {
+    transition: {
+      duration: 500,
+      easing: 'cubic-in-out'
+    }
+  });
+  app.plot._fullLayout.xaxis._rangeInitial = app.home_range;
+}
 
-    let ssh_dates = data.Koper.Dates.map(val => parseDate(val));
-    let ssh_values = data.Koper.values;
 
-    Plotly.animate(plot, {
-      data: [{
-        x: dates,
-        y: values
-      },{
-        x:ssh_dates,
-        y:ssh_values,
-        name: "Izmerjena višina"
-      }],
-      layout: {
-        xaxis: {range: [ssh_dates[0], dates[dates.length - 1]]}
-      }
-    }, {
-      transition: {
-        duration: 500,
-        easing: 'cubic-in-out'
-      }
+window.onload = function(){
+  // Store elements
+  app.plot = document.getElementById('plot');
+  app.run_select = document.getElementById('run_select');
+
+  app.run_select.addEventListener("change", selectDate);
+
+  // Populate date selection
+  fetchData()
+  .then(() => {
+    app.data.predictions.forEach((val, i) => {
+      let opt = document.createElement("option");
+      opt.value = i;
+      opt.innerHTML = val.date;
+      app.run_select.appendChild(opt);
     });
+    
+    // Display the most recent run
+    let last_i = app.data.predictions.length - 1;
+    app.run_select.value = last_i;
+    initPlot(last_i);
   });
 }
