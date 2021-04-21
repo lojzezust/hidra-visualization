@@ -1,5 +1,7 @@
 
-var app = {};
+var app = {
+  critical: {red: 350, orange:330, yellow:300}
+};
 
 function getDates(){
   return fetch('https://gea.arso.gov.si/vg2020-dev/hidra/listHIDRAjson')
@@ -22,7 +24,7 @@ function selectDate(e){
 
 function initPlot(){
   let pred = app.data.predictions[app.data.predictions.length - 1];
-  let start_date = moment(pred.x[0]).subtract(24, 'hours').format();
+  let start_date = moment(pred.x[0]).subtract(23, 'hours').format();
   let pred_start = pred.x[0];
   let end_date = pred.x[pred.x.length - 1];
   app.home_range = [start_date, end_date];
@@ -75,6 +77,42 @@ function initPlot(){
       opacity: 0.2,
       line: {
           width: 0
+      }
+    },{
+      type: 'line',
+      x0: 0,
+      x1: 1,
+      y0: app.critical.red,
+      y1: app.critical.red,
+      xref: 'paper',
+      line: {
+        color: 'red',
+        width: 1.5,
+        dash: 'dot'
+      }
+    },{
+      type: 'line',
+      x0: 0,
+      x1: 1,
+      y0: app.critical.orange,
+      y1: app.critical.orange,
+      xref: 'paper',
+      line: {
+        color: 'orange',
+        width: 1.5,
+        dash: 'dot'
+      }
+    },{
+      type: 'line',
+      x0: 0,
+      x1: 1,
+      y0: app.critical.yellow,
+      y1: app.critical.yellow,
+      xref: 'paper',
+      line: {
+        color: 'yellow',
+        width: 1.5,
+        dash: 'dot'
       }
     }],
     sliders: [{
@@ -158,7 +196,7 @@ function fetchData(){
 
 function updatePlot(index){
   let pred = app.data.predictions[index];
-  let start_date = moment(pred.x[0]).subtract(24, 'hours').format();
+  let start_date = moment(pred.x[0]).subtract(23, 'hours').format();
   let pred_start = pred.x[0];
   let end_date = pred.x[pred.x.length - 1]
   app.home_range = [start_date, end_date];
