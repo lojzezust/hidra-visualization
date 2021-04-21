@@ -17,7 +17,7 @@ function parseDate(date){
 }
 
 function selectDate(e){
-  updatePlot(app.run_select.value);
+  updatePlot(e.step._index);
 }
 
 function initPlot(){
@@ -50,26 +50,48 @@ function initPlot(){
     name: "Izmerjena višina"
   }];
 
+  let slider_vals = app.data.predictions.map((pred,i) => {
+    return {
+      label: pred.date,
+      method: 'skip'
+    };
+  });
+  let last_i = slider_vals.length - 1;
+
   let layout = {
     xaxis: {range: [start_date, end_date]},
-    shapes: [
-      {
-          type: 'rect',
-          xref: 'x',
-          yref: 'paper',
-          x0: start_date,
-          y0: 0,
-          x1: pred_start,
-          y1: 1,
-          fillcolor: '#d3d3d3',
-          opacity: 0.2,
-          line: {
-              width: 0
-          }
-      }]
+    shapes: [{
+      type: 'rect',
+      xref: 'x',
+      yref: 'paper',
+      x0: start_date,
+      y0: 0,
+      x1: pred_start,
+      y1: 1,
+      fillcolor: '#d3d3d3',
+      opacity: 0.2,
+      line: {
+          width: 0
+      }
+    }],
+    sliders: [{
+      pad: {t: 50},
+      active: last_i,
+      currentvalue: {
+        xanchor: 'right',
+        prefix: 'Datum napovedi: ',
+        font: {
+          color: '#888',
+          size: 20
+        }
+      },
+      steps: slider_vals
+    }]
   };
 
   Plotly.newPlot(app.plot, data, layout);
+
+  app.plot.on('plotly_sliderchange', selectDate);
 }
 
 function average(vals){
@@ -180,23 +202,8 @@ function updatePlot(index){
 window.onload = function(){
   // Store elements
   app.plot = document.getElementById('plot');
-  app.run_select = document.getElementById('run_select');
-
-  app.run_select.addEventListener("change", selectDate);
 
   // Populate date selection
   fetchData()
-  .then(() => {
-    app.data.predictions.forEach((val, i) => {
-      let opt = document.createElement("option");
-      opt.value = i;
-      opt.innerHTML = val.date;
-      app.run_select.appendChild(opt);
-    });
-    
-    // Display the most recent run
-    let last_i = app.data.predictions.length - 1;
-    app.run_select.value = last_i;
-    initPlot(last_i);
-  });
+  .then(() => initPlot());
 }
