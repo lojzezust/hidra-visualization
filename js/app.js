@@ -89,7 +89,7 @@ function initPlot(){
     }]
   };
 
-  Plotly.newPlot(app.plot, data, layout);
+  Plotly.newPlot(app.plot, data, layout, {responsive: true});
 
   app.plot.on('plotly_sliderchange', selectDate);
 }
