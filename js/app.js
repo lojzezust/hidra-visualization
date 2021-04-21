@@ -63,7 +63,7 @@ function initPlot(){
   let layout = {
     margin: {t: 40},
     xaxis: {range: [start_date, end_date]},
-    yaxis: {fixedrange: true},
+    yaxis: {fixedrange: true, title: {text: 'Višina [cm]'}},
     dragmode: 'pan',
     shapes: [{
       type: 'rect',
@@ -198,7 +198,7 @@ function updatePlot(index){
   let pred = app.data.predictions[index];
   let start_date = moment(pred.x[0]).subtract(23, 'hours').format();
   let pred_start = pred.x[0];
-  let end_date = pred.x[pred.x.length - 1]
+  let end_date = pred.x[pred.x.length - 1];
   app.home_range = [start_date, end_date];
 
   let yMax = pred.y.map((y,i) => y+2*pred.stddev[i]);
