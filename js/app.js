@@ -59,7 +59,10 @@ function initPlot(){
   let last_i = slider_vals.length - 1;
 
   let layout = {
+    margin: {t: 40},
     xaxis: {range: [start_date, end_date]},
+    yaxis: {fixedrange: true},
+    dragmode: 'pan',
     shapes: [{
       type: 'rect',
       xref: 'x',
@@ -75,7 +78,7 @@ function initPlot(){
       }
     }],
     sliders: [{
-      pad: {t: 50},
+      pad: {t: 70},
       active: last_i,
       currentvalue: {
         xanchor: 'right',
