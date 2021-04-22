@@ -42,6 +42,7 @@ function initPlot(){
     x: pred.x.concat([...pred.x].reverse()),
     y: yMax.concat([...yMin].reverse()),
     legendgroup:'predictions',
+    hoverinfo: 'none',
     showlegend:false,
     line: {width:0, color: '#1f77b4'},
     fill:'toself'
