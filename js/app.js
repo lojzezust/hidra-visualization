@@ -6,14 +6,19 @@ var app = {
 // Fetch dates from server
 function getDates(){
   return fetch('https://gea.arso.gov.si/vg2020-dev/hidra/listHIDRAjson')
-  .then(response => response.json())
-  .then(data => Promise.resolve(data.Dates));
+    .then(response => response.json())
+    .then(data => Promise.resolve(data.Dates));
 }
 
 // Fetch a single run from server
 function getRun(date){
   return fetch('https://gea.arso.gov.si/vg2020-dev/hidra/showHIDRAjson?date='+date)
-  .then(response => response.json());
+    .then(response => response.json());
+}
+
+function getSSH(){
+  return fetch('https://gea.arso.gov.si/vg2020-dev/hidra/showKPjson')
+    .then(response => response.json());
 }
 
 function parseDate(date){
@@ -42,24 +47,30 @@ function selectDate(e){
 
 // Loads data from server into the app
 function fetchData(){
-  return getDates()
+  
+  let runs = getDates()
   .then(dates => {
     dates.sort();
     app.dates = dates;
     let promises = dates.map(date => getRun(date));
     return Promise.all(promises);
-  })
+  });
+
+  let ssh = getSSH();
+
+  return Promise.all([runs, ssh])
   .then(data => {
-    let ssh = [];
-    let ssh_dates = [];
+    let runs_data = data[0];
+    let ssh_data = data[1];
+
+    let ssh = ssh_data.Values;
+    let ssh_dates = ssh_data.Dates.map(val => parseDate(val));
+    
     let predictions = [];
-
-    for(d of data){
-      ssh.push(...d.Koper.values);
-      ssh_dates.push(...d.Koper.Dates.map(val => parseDate(val)));
-
-      let last_v = ssh[ssh.length - 1];
-      let last_d = ssh_dates[ssh_dates.length - 1];
+    for(d of runs_data){
+      
+      let last_v = d.Koper.values[d.Koper.values.length - 1];
+      let last_d = parseDate(d.Koper.Dates[d.Koper.Dates.length - 1]);
 
       let ens = d.Hidra[0].values.map((_, colIndex) => d.Hidra.map(row => row.values[colIndex]));
       let means = ens.map(vals => average(vals));
