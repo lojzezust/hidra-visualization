@@ -68,9 +68,6 @@ function fetchData(){
     
     let predictions = [];
     for(d of runs_data){
-      
-      let last_v = d.Koper.values[d.Koper.values.length - 1];
-      let last_d = parseDate(d.Koper.Dates[d.Koper.Dates.length - 1]);
 
       // Moment matching
       let ens_mu = d.Hidra[0].values.map((_, colIndex) => d.Hidra.map(row => row.values[colIndex]));
@@ -88,9 +85,9 @@ function fetchData(){
 
       let pred = {
         date: d.ForecastDate,
-        x: [last_d, ...d.Dates.map(val => parseDate(val))],
-        y: [last_v, ...means],
-        stddev: [0, ...stddevs],
+        x: d.Dates.map(val => parseDate(val)),
+        y: means,
+        stddev: stddevs,
       };
 
       predictions.push(pred);
