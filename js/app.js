@@ -111,7 +111,7 @@ function initPlot(){
 
   // FRAMES
   let frames = app.data.predictions.map((pred,i) => {
-    let start_date = moment(pred.x[0]).subtract(23, 'hours').format();
+    let start_date = moment(pred.x[0]).subtract(24, 'hours').format();
     let pred_start = pred.x[0];
     let end_date = pred.x[pred.x.length - 1];
   
@@ -164,7 +164,7 @@ function initPlot(){
 
   // DATA
   let pred = app.data.predictions[app.data.predictions.length - 1];
-  let start_date = moment(pred.x[0]).subtract(23, 'hours').format();
+  let start_date = moment(pred.x[0]).subtract(24, 'hours').format();
   let pred_start = pred.x[0];
   let end_date = pred.x[pred.x.length - 1];
 
