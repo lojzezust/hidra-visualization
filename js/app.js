@@ -72,9 +72,19 @@ function fetchData(){
       let last_v = d.Koper.values[d.Koper.values.length - 1];
       let last_d = parseDate(d.Koper.Dates[d.Koper.Dates.length - 1]);
 
-      let ens = d.Hidra[0].values.map((_, colIndex) => d.Hidra.map(row => row.values[colIndex]));
-      let means = ens.map(vals => average(vals));
-      let stddevs = ens.map(vals => stddev(vals))
+      // Moment matching
+      let ens_mu = d.Hidra[0].values.map((_, colIndex) => d.Hidra.map(row => row.values[colIndex]));
+      let ens_std = d.Hidra[0].stds.map((_, colIndex) => d.Hidra.map(row => row.stds[colIndex]));
+
+      let means = ens_mu.map(vals => average(vals));
+      let stddevs = ens_mu.map((mu_vals, i) => {
+        let std_vals = ens_std[i];
+        let L = average(mu_vals.map((mu_j, j) => mu_j*mu_j + std_vals[j]*std_vals[j]));
+        let mu_m = average(mu_vals)
+        let R = mu_m * mu_m;
+
+        return Math.sqrt(L - R)
+      });
 
       let pred = {
         date: d.ForecastDate,
