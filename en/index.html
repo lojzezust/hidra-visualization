@@ -1,0 +1,54 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>HIDRA | Koper forecast</title>
+  <meta name="description" content="Napovedi HIDRA modela za Koper">
+  <meta name="author" content="Lojze Žust">
+
+  <link rel="stylesheet" href="../shared/css/simple-grid.min.css?v=1.0">
+  <link rel="stylesheet" href="../shared/css/styles.css?v=1.0">
+
+  <script src="../shared/js/moment.min.js"></script>
+  <script src="../shared/js/plotly-latest.min.js"></script>
+  <script src="../shared/js/localization.js"></script>
+  <script id="app-script" data-lang="en" src="../shared/js/app.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="lang-select"><a href="../sl/">sl</a> | <a href="../en/">en</a></div>
+        <h1>HIDRA forecast</h1>
+        <p>
+          Ensemble sea-level forecast of the HIDRA<sup>[<a href="#references">1</a>]</sup> model for the Koper gauge station.
+          The most recent forecast is shown. To analyse HIDRA in different conditions, older forecasts can also be selected using the slider.
+          The measured sea-level is shown in green and HIDRA predictions are colored blue.
+          The warning sea-level values are also shown as yellow, orange and red lines.
+          HIDRA uses past measurements of the sea-level in it's forecast. The range of the measurements used as input is denoted as a grayed out area.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div id="plot"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h2>About HIDRA</h2>
+        <p>
+          HIDRA is a deep model for sea-level forecasting and is the result of a collaboration between
+          <a href="http://www.vicos.si/">Visual Cognitive Systems Lab, University of Ljubljana, Faculty of Computer and Information Science</a> and
+          <a href="https://www.arso.gov.si/">Slovenian Environment Agency (ARSO)</a>.
+          HIDRA bases its predicitons on ensemble weather forecasts of the European Centre for Medium-Range Weather Forecasts (ECMWF) and past 24 hours of sea-level measurements at the Koper gauge station (source: ARSO).
+          The model was trained on a dataset of ECMWF weather forecasts for the years 2006-2016 and Koper sea-level measurements for the same time period.
+        </p>
+        <h2 id="references">References</h2>
+        <p>[1] Lojze Žust, Anja Fettich, Matej Kristan, and Matjaž Ličer: HIDRA 1.0: deep-learning-based ensemble sea level forecasting in the northern Adriatic, Geosci. Model Dev., 14, 2057–2074, <a href="https://doi.org/10.5194/gmd-14-2057-2021">https://doi.org/10.5194/gmd-14-2057-2021</a>, 2021.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

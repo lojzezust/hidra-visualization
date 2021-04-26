@@ -174,7 +174,7 @@ function initPlot(){
   let data = [{
     x: pred.x,
     y: pred.y,
-    name: "HIDRA napoved",
+    name: app.localization.localize("HIDRA napoved", app.lang),
     legendgroup:'predictions'
   },
   {
@@ -189,14 +189,14 @@ function initPlot(){
   {
     x:app.data.ssh.x,
     y:app.data.ssh.y,
-    name: "Izmerjena višina"
+    name: app.localization.localize("Izmerjena višina", app.lang)
   }];
 
   // LAYOUT
   let layout = {
     margin: {t: 40},
     xaxis: {range: [start_date, end_date]},
-    yaxis: {fixedrange: true, title: {text: 'Višina [cm]'}},
+    yaxis: {fixedrange: true, title: {text: app.localization.localize("Višina [cm]", app.lang)}},
     dragmode: 'pan',
     shapes: [{
       type: 'rect',
@@ -253,7 +253,7 @@ function initPlot(){
       active: last_i,
       currentvalue: {
         xanchor: 'right',
-        prefix: 'Datum napovedi: ',
+        prefix: app.localization.localize("Datum napovedi: ", app.lang),
         font: {
           color: '#888',
           size: 20
@@ -275,6 +275,8 @@ function initPlot(){
 
 // When ready, load data and display plot
 window.onload = function(){
+  app.localization = localization;
+  app.lang = document.getElementById('app-script').getAttribute('data-lang')
   app.plot = document.getElementById('plot');
 
   // Populate date selection
