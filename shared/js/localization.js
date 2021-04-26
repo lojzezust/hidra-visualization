@@ -7,7 +7,7 @@ var localization = function(){
         },
         "Izmerjena višina": {
             'sl': "Izmerjena višina",
-            'en': "Measured sea-level"
+            'en': "Sea-level measurement"
         },
         "Višina [cm]": {
             'sl': "Višina morske gladine [cm]",
