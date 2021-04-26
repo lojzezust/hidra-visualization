@@ -267,7 +267,9 @@ function initPlot(){
     data:data, 
     layout:layout,
     frames:frames,
-    config: {responsive: true}
+    config: {responsive: true, locale: app.lang}
+  }).then(()=>{
+    app.placeholder.parentNode.removeChild(app.placeholder);
   });
 
   app.plot.on('plotly_sliderchange', selectDate);
@@ -278,6 +280,7 @@ window.onload = function(){
   app.localization = localization;
   app.lang = document.getElementById('app-script').getAttribute('data-lang')
   app.plot = document.getElementById('plot');
+  app.placeholder = document.getElementById('plot-placeholder');
 
   // Populate date selection
   fetchData()
