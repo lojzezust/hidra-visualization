@@ -1,3 +1,7 @@
+.half {
+    display: inline-block;
+    width: 49%;
+}
 
 .lang-select {
     text-align: right;
