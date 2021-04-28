@@ -39,10 +39,25 @@ function stddev(vals){
 
 // Called when different run is selected
 function selectDate(e){
-  let pred = app.data.predictions[e.step._index];
-  let start_date = moment(pred.x[0]).subtract(23, 'hours').format();
-  let end_date = pred.x[pred.x.length - 1];
-  app.plot._fullLayout.xaxis._rangeInitial = [start_date, end_date];
+  let frame = app.frames.find((f) => f.name == e.step.value);
+
+  Plotly.animate(app.plot, [frame.data_frame], {
+    mode: 'immediate',
+    frame: {duration: 0, redraw: false},
+  }).then(()=>{
+    app.plot._fullLayout.xaxis._rangeInitial = frame.date_range;
+
+    // autoscale
+    Plotly.relayout(app.plot, {yaxis: {autorange:true}});
+
+    return Plotly.animate(app.plot, [frame.animation_frame], {
+      mode: 'immediate',
+      transition: {duration: 500, easing:'exp-out'},
+      frame: {duration: 500, redraw: false},
+    })
+  }).then(()=>{
+    
+  });
 }
 
 // Loads data from server into the app
@@ -110,7 +125,7 @@ function fetchData(){
 function initPlot(){
 
   // FRAMES
-  let frames = app.data.predictions.map((pred,i) => {
+  app.frames = app.data.predictions.map((pred,i) => {
     let start_date = moment(pred.x[0]).subtract(24, 'hours').format();
     let pred_start = pred.x[0];
     let end_date = pred.x[pred.x.length - 1];
@@ -120,30 +135,35 @@ function initPlot(){
 
     return {
       name: pred.date,
-      data: [{
-        x: pred.x,
-        y: pred.y
-      },{
-        x: pred.x.concat([...pred.x].reverse()),
-        y: yMax.concat([...yMin].reverse()),
-      }],
-      layout: {
-        xaxis: {range: [start_date, end_date]},
-        shapes: [
-          {
-              type: 'rect',
-              xref: 'x',
-              yref: 'paper',
-              x0: start_date,
-              y0: 0,
-              x1: pred_start,
-              y1: 1,
-              fillcolor: '#d3d3d3',
-              opacity: 0.2,
-              line: {
-                  width: 0
-              }
-          }]
+      date_range: [start_date, end_date],
+      data_frame: {
+        data: [{
+          x: pred.x,
+          y: pred.y
+        },{
+          x: pred.x.concat([...pred.x].reverse()),
+          y: yMax.concat([...yMin].reverse()),
+        }],
+        layout: {
+          shapes: [
+            {
+                type: 'rect',
+                xref: 'x',
+                yref: 'paper',
+                x0: start_date,
+                y0: 0,
+                x1: pred_start,
+                y1: 1,
+                fillcolor: '#d3d3d3',
+                opacity: 0.2,
+                line: {
+                    width: 0
+                }
+            }]
+        }
+      },
+      animation_frame: {
+        layout: {xaxis: {range: [start_date, end_date]} }
       }
     };
   });
@@ -152,12 +172,7 @@ function initPlot(){
   let slider_vals = app.data.predictions.map((pred,i) => {
     return {
       label: pred.date,
-      method: 'animate',
-      args: [[pred.date], {
-        mode: 'immediate',
-        transition: {duration: 500, easing:'cubic-in-out'},
-        frame: {duration: 500, redraw: false},
-      }]
+      method: 'skip'
     };
   });
   let last_i = slider_vals.length - 1;
@@ -266,7 +281,6 @@ function initPlot(){
   Plotly.newPlot(app.plot, {
     data:data, 
     layout:layout,
-    frames:frames,
     config: {responsive: true, locale: app.lang}
   }).then(()=>{
     app.placeholder.parentNode.removeChild(app.placeholder);
