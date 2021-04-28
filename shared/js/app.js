@@ -48,7 +48,7 @@ function selectDate(e){
     app.plot._fullLayout.xaxis._rangeInitial = frame.date_range;
 
     // autoscale
-    Plotly.relayout(app.plot, {yaxis: {autorange:true}});
+    Plotly.relayout(app.plot, {yaxis: {fixedrange: true}});
 
     return Plotly.animate(app.plot, [frame.animation_frame], {
       mode: 'immediate',
