@@ -141,8 +141,11 @@ function initPlot(){
           x: pred.x,
           y: pred.y
         },{
-          x: pred.x.concat([...pred.x].reverse()),
-          y: yMax.concat([...yMin].reverse()),
+          x: pred.x,
+          y: yMax,
+        },{
+          x: pred.x,
+          y: yMin,
         }],
         layout: {
           shapes: [
@@ -190,21 +193,31 @@ function initPlot(){
     x: pred.x,
     y: pred.y,
     name: app.localization.localize("HIDRA napoved", app.lang),
-    legendgroup:'predictions'
+    legendgroup:'predictions',
+    line: {shape: 'spline', smoothing: 1.3}
   },
   {
-    x: pred.x.concat([...pred.x].reverse()),
-    y: yMax.concat([...yMin].reverse()),
+    x: pred.x,
+    y: yMax,
     legendgroup:'predictions',
     hoverinfo: 'none',
     showlegend:false,
-    line: {width:0, color: '#1f77b4'},
-    fill:'toself'
+    line: {width:0, color: '#1f77b4', shape: 'spline', smoothing: 1.3},
+  },
+  {
+    x: pred.x,
+    y: yMin,
+    legendgroup:'predictions',
+    hoverinfo: 'none',
+    showlegend:false,
+    line: {width:0, color: '#1f77b4', shape: 'spline', smoothing: 1.3},
+    fill:'tonexty'
   },
   {
     x:app.data.ssh.x,
     y:app.data.ssh.y,
-    name: app.localization.localize("Izmerjena višina", app.lang)
+    name: app.localization.localize("Izmerjena višina", app.lang),
+    line: {color: '#444'}
   }];
 
   // LAYOUT
