@@ -1,13 +1,18 @@
 
 var app = {
-  critical: {red: 350, orange:330, yellow:300}
+  critical: {red: 350, orange:330, yellow:300},
+  maxRuns: 30
 };
 
 // Fetch dates from server
 function getDates(){
   return fetch('https://gea.arso.gov.si/vg2020-dev/hidra/listHIDRAjson')
     .then(response => response.json())
-    .then(data => Promise.resolve(data.Dates));
+    .then(data => {
+      // Select last N runs
+      let dates = data.Dates.slice(-app.maxRuns);
+      return Promise.resolve(dates);
+    });
 }
 
 // Fetch a single run from server
