@@ -1,12 +1,12 @@
 
 var app = {
   critical: {red: 350, orange:330, yellow:300},
-  maxRuns: 30
+  maxRuns: 100
 };
 
 // Fetch dates from server
 function getDates(){
-  return fetch('https://gea.arso.gov.si/vg2020-dev/hidra/listHIDRAjson')
+  return fetch('../shared/data/dates.json')  // https://gea.arso.gov.si/vg2020-dev/hidra/listHIDRAjson
     .then(response => response.json())
     .then(data => {
       // Select last N runs
@@ -22,7 +22,7 @@ function getRun(date){
 }
 
 function getSSH(){
-  return fetch('https://gea.arso.gov.si/vg2020-dev/hidra/showKPjson')
+  return fetch('../shared/data/mareografKP_vodostaj.json')  // https://gea.arso.gov.si/vg2020-dev/hidra/showKPjson
     .then(response => response.json());
 }
 
