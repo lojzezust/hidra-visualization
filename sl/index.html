@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>HIDRA | Koper napovedi</title>
+  <title>HIDRA | Napoved v Kopru</title>
   <meta name="description" content="Napovedi HIDRA modela za Koper">
   <meta name="author" content="Lojze Žust">
 
@@ -33,32 +33,31 @@
       <div class="col-12">
         <div>
           <div class="half">
-            <a href="https://github.com/lojzezust/HIDRA">github</a> | 
-            <a href="mailto:lojze.zust@fri.uni-lj.si">email</a>
+            <a href="https://doi.org/10.5194/gmd-16-271-2023">Članek</a> |
+            <a href="https://github.com/rusmarko/HIDRA2">GitHub</a>
           </div>
           <div class="half lang-select">sl | <a href="../en/">en</a></div>
         </div>
-        <h1 style="margin-top:0px">HIDRA napovedi</h1>
+        <h1 style="margin-top:0px">HIDRA | Napoved v Kopru</h1>
       </div>
     </div>
-    <div class="row">
-      <div class="col-12">
-        <p>
-          <b style="color:orange">Opomba</b>: Model HIDRA 1 je nasledil model HIDRA 2. Tekoča napoved novega modela je na voljo <a href="https://rusmarko.github.io/HIDRA2-visualization/en/" target="_blank">tukaj</a>.
-        </p>
-      </div>
-    </div>
+<!--    <div class="row">-->
+<!--      <div class="col-12">-->
+<!--        <p>-->
+<!--          <b style="color:orange">Opomba</b>: Model HIDRA 1 je nasledil model HIDRA 2. Tekoča napoved novega modela je na voljo <a href="https://rusmarko.github.io/HIDRA2-visualization/en/" target="_blank">tukaj</a>.-->
+<!--        </p>-->
+<!--      </div>-->
+<!--    </div>-->
     <div class="row">
       <div class="col-4">
         <img style="width:100%" src="../shared/img/logo.png"/>
       </div>
       <div class="col-8">
         <p>
-          Na tej strani ohranjamo arhivske ansambelske napovedi višine morske gladine modela HIDRA<sup>[<a href="#viri">1</a>]</sup> za začetek leta 2023 za lokacijo Mareografska postaja Koper.
-          Z drsnikom lahko izberete starejše napovedi in preverite natančnost modela.
-          S črno je prikazana izmerjena višina gladine (če je že znana), z modro pa napovedi HIDRA modela. 
-          Na grafu so prikazane tudi opozorilne vrednosti višine morske gladine (rumena, oranžna in rdeča). 
-          S sivo cono je označeno obdobje meritev, ki ga HIDRA upošteva pri izračunu napovedi. 
+          Stran prikazuje tekočo 72-urno napoved višine morske gladine modela HIDRA2<sup>[<a href="#viri">1</a>]</sup> za lokacijo mareografske postaje v Kopru.
+          72-urna napoved je prikazana z modro, s črno so prikazane izmerjene višine morske gladine.
+          Napoved je prikazana kot povprečje vseh 50 ansambelskih napovedi skupaj s standardnim odklonom napovedi.
+          Opozorilne vrednosti so označene z rumeno, oranžno in rdečo.
         </p>
       </div>
     </div>
@@ -75,18 +74,23 @@
       <div class="col-12">
         <h2>O modelu HIDRA</h2>
         <p>
-          HIDRA je globok model za napovedovanje višine morske gladine, ki je plod sodelovanja 
+          HIDRA2<sup>[<a href="#references">1</a>]</sup> je naslednja generacija globokega modela za napovedovanje višine morske gladine, pri čemer je model
+          HIDRA1<sup>[<a href="#references">2</a>]</sup> prva. Modeli so rezultat sodelovanja
           <a href="http://www.vicos.si/">Laboratorija za umetne vizualne spoznavne sisteme, Fakultete za računalništvo in informatiko, Univerze v Ljubljani</a>,
           <a href="https://www.nib.si/mbp/sl/">Morske biološke postaje Piran, Nacionalnega inštituta za biologijo</a> in
           <a href="https://www.meteo.si/met/sl/app/webmet">Agencije Republike Slovenije za okolje</a>.
           Napovedi izdeluje na podlagi ansambelske vremenske napovedi Evropskega centra za srednjeročno napovedovanje vremena (ECMWF) in meritev morske gladine na Mareografski postaji Koper v zadnjih 24 urah (vir: ARSO). 
           Učna množica za model HIDRA vsebuje modelske napovedi ECMWF ansambla med letoma 2006 in 2020, ter meritve gladine morja v Kopru za isto obdobje.
         </p>
-        <h2>Povezave in kontakt</h2>
-        <p>HIDRA GitHub repozitorij: <a href="https://github.com/lojzezust/HIDRA">https://github.com/lojzezust/HIDRA</a></p>
-        <p>Kontaktni mail: <a href="mailto:lojze.zust@fri.uni-lj.si">lojze.zust@fri.uni-lj.si</a></p>
-        <h2 id="viri">Viri</h2>
-        <p>[1] Lojze Žust, Anja Fettich, Matej Kristan, and Matjaž Ličer: HIDRA 1.0: deep-learning-based ensemble sea level forecasting in the northern Adriatic, Geosci. Model Dev., 14, 2057–2074, <a href="https://doi.org/10.5194/gmd-14-2057-2021">https://doi.org/10.5194/gmd-14-2057-2021</a>, 2021.</p>
+<!--        <h2>Povezave in kontakt</h2>-->
+<!--        <p>HIDRA GitHub repozitorij: <a href="https://github.com/lojzezust/HIDRA">https://github.com/lojzezust/HIDRA</a></p>-->
+<!--        <p>Kontaktni mail: <a href="mailto:lojze.zust@fri.uni-lj.si">lojze.zust@fri.uni-lj.si</a></p>-->
+        <br>
+        <h3 id="viri">Viri</h3>
+        <p>[1] Rus, M., Fettich, A., Kristan, M., and Ličer, M.: HIDRA2: deep-learning ensemble sea level and storm tide forecasting in the presence of seiches – the case of
+                the northern Adriatic, Geosci. Model Dev., 16, 271–288, <a href="https://doi.org/10.5194/gmd-16-271-2023">https://doi.org/10.5194/gmd-16-271-2023</a>, 2023.</p>
+        <p>[2] Lojze Žust, Anja Fettich, Matej Kristan, and Matjaž Ličer: HIDRA 1.0: deep-learning-based ensemble sea level forecasting in the northern Adriatic, Geosci. Model Dev., 14, 2057–2074, <a href="https://doi.org/10.5194/gmd-14-2057-2021">https://doi.org/10.5194/gmd-14-2057-2021</a>, 2021.</p>
+        <br><br>
       </div>
     </div>
   </div>
