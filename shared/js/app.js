@@ -34,6 +34,12 @@ function average(vals) {
     return sum / vals.length;
 }
 
+function std_average(vals) {
+    let squared = vals.map(v => v * v);
+    let mean = average(vals);
+    return Math.sqrt(mean);
+}
+
 function stddev(vals) {
     let m = average(vals);
     let sqDiffs = vals.map(v => (v - m) * (v - m));
@@ -93,13 +99,15 @@ function fetchData() {
 
                 for (let i = 0; i < 72; i++) {
                     let y_i = [];
+                    let std_i = [];
 
                     for (let j = 0; j < d.Hidra.length; j++) {
                         y_i.push(d.Hidra[j].values[i]);
+                        std_i.push(d.Hidra[j].std[i]);
                     }
 
                     ys.push(average(y_i));
-                    stddevs.push(stddev(y_i));
+                    stddevs.push(std_average(std_i));
                 }
                 // console.log(ys);
                 // console.log(stddevs);
@@ -136,8 +144,8 @@ function initPlot() {
         let pred_start = pred.x[0];
         let end_date = pred.x[pred.x.length - 1];
 
-        let yMax = pred.y.map((y, i) => y + 3 * pred.stddev[i]);
-        let yMin = pred.y.map((y, i) => y - 3 * pred.stddev[i]);
+        let yMax = pred.y.map((y, i) => y + 2 * pred.stddev[i]);
+        let yMin = pred.y.map((y, i) => y - 2 * pred.stddev[i]);
 
         return {
             name: pred.date,

@@ -2,8 +2,8 @@
 var localization = function(){
     let values = {
         "HIDRA2 napoved": {
-            'sl': "HIDRA2 napoved (±3σ)",
-            'en': "HIDRA2 forecast (±3σ)"
+            'sl': "HIDRA2 napoved (±2σ)",
+            'en': "HIDRA2 forecast (±2σ)"
         },
         "Izmerjena višina": {
             'sl': "Izmerjena višina",
