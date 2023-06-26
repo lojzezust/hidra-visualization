@@ -49,7 +49,7 @@
           <p>
               This page shows a live 72h sea-level forecast of HIDRA for the Koper mareographic station (northern Adriatic Sea), Slovenia.
               72h forecast is shown in blue, measurements are in black.
-              Forecast is shown as the mean of all 50 ensemble forecasts together with the standard deviation of the forecasts.
+              Forecast is shown as the mean of all 50 ensemble forecasts together with the predicted standard deviation of the forecasts.
               Standard warning levels are indicated by yellow (low), orange (medium) and red (high).
               Use the slider to inspect the prediction accuracy in older forecasts.
           </p>
@@ -77,7 +77,7 @@
           the <a href="https://www.nib.si/mbp/en/">Marine biology station at the National Institute of Biology</a> and
           the <a href="https://www.gov.si/drzavni-organi/organi-v-sestavi/agencija-za-okolje/">Slovenian Environment Agency (ARSO)</a>.
           HIDRA bases its predictions on ensemble weather forecasts from the European Centre for Medium-Range Weather Forecasts (ECMWF) and 72-hour sea-level measurements at the Koper mareographic station (source: ARSO).
-          The model was trained on a dataset of ECMWF weather forecasts for 2006-2020 and Koper sea-level measurements for the same period.
+          The model was trained on ERA5 data from 1970 to 2021 and finetuned on a dataset of ECMWF weather forecasts from 2006 to 2023 and Koper sea-level measurements for the same period.
         </p>
         <h3 id="references">References</h3>
         <p>[1] Rus, M., Fettich, A., Kristan, M., and Ličer, M.: HIDRA2: deep-learning ensemble sea level and storm tide forecasting in the presence of seiches – the case of
