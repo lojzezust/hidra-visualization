@@ -34,10 +34,13 @@ function average(vals) {
     return sum / vals.length;
 }
 
-function std_average(vals) {
-    let squared = vals.map(v => v * v);
-    let mean = average(vals);
-    return Math.sqrt(mean);
+function std_average(y, std) {
+    let std_squared = std.map(v => v * v);
+    let y_squared = y.map(v => v * v);
+    let sum = std_squared.map((v, i) => v + y_squared[i]);
+    let mean = average(sum);
+    let y_mean = average(y);
+    return Math.sqrt(mean - y_mean * y_mean);
 }
 
 function stddev(vals) {
@@ -107,7 +110,7 @@ function fetchData() {
                     }
 
                     ys.push(average(y_i));
-                    stddevs.push(std_average(std_i));
+                    stddevs.push(std_average(y_i, std_i));
                 }
                 // console.log(ys);
                 // console.log(stddevs);
