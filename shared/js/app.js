@@ -3,26 +3,56 @@ var app = {
     maxRuns: 30
 };
 
+function showError() {
+    // hide plot-placeholder div
+    $('#plot-placeholder').hide();
+    $('#error-placeholder').show();
+}
+
 // Fetch dates from server
 function getDates() {
     return fetch('https://gea.arso.gov.si/vg2020-dev/hidra/listHIDRAjson')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                showError();
+            }
+            return response.json();
+        })
         .then(data => {
             // Select last N runs
             let dates = data.Dates.slice(-app.maxRuns);
             return Promise.resolve(dates);
+        })
+        .catch(error => {
+            showError();
         });
 }
 
 // Fetch a single run from server
 function getRun(date) {
     return fetch('https://gea.arso.gov.si/vg2020-dev/hidra/showHIDRAjson?date=' + date)
-        .then(response => response.json());
+        .then(response => {
+            if (!response.ok) {
+                showError();
+            }
+            return response.json();
+        })
+        .catch(error => {
+            showError();
+        });
 }
 
 function getSSH() {
     return fetch('https://gea.arso.gov.si/vg2020-dev/hidra/showKPjson')
-        .then(response => response.json());
+        .then(response => {
+            if (!response.ok) {
+                showError();
+            }
+            return response.json();
+        })
+        .catch(error => {
+            showError();
+        });
 }
 
 function parseDate(date) {
