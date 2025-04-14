@@ -239,7 +239,7 @@ function initPlot() {
     let data = [{
         x: pred.x,
         y: pred.y,
-        name: app.localization.localize("HIDRA2 napoved", app.lang),
+        name: app.localization.localize("HIDRA3 napoved", app.lang),
         legendgroup: 'predictions',
         // line: {shape: 'spline', smoothing: 1.3}
     },
